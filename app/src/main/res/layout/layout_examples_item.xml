@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/dimen10">
+
+        <TextView
+            android:id="@+id/tvItemName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/dimen15"
+            android:gravity="start"
+            android:text="@string/create_counter_disclaimer"
+            android:textColor="@color/gray"
+            android:textSize="@dimen/textSize15"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <HorizontalScrollView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dimen10"
+            android:scrollbars="none"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tvItemName">
+
+            <LinearLayout
+                android:id="@+id/lvExample"
+                android:visibility="gone"
+                android:layout_width="match_parent"
+                android:paddingEnd="@dimen/dimen12"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/dimen12"
+                android:layout_marginTop="@dimen/dimen10"
+                android:orientation="horizontal" />
+
+        </HorizontalScrollView>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>
