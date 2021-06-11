@@ -10,7 +10,10 @@ import com.cornershop.counterstest.presentation.ui.base.*
 class MainViewModel(
     private val getCountersUseCase: GetCountersUseCase,
     private val increaseCounterUseCase: IncreaseCounterUseCase,
-    private val decrementCounterUseCase: DecrementCounterUseCase
+    private val decrementCounterUseCase: DecrementCounterUseCase,
+    private val selectCounterUseCase: SelectCounterUseCase,
+    private val unSelectCounterUseCase: UnSelectCounterUseCase,
+    private val deleteCounterUseCase: DeleteCounterUseCase
 ) : BaseViewModel<List<Counter>, Counter>() {
 
     fun getCounters() = executeUseCase {
@@ -27,6 +30,24 @@ class MainViewModel(
 
     fun decrementCounter(counter: Counter) = executeUseCase {
         decrementCounterUseCase(counter)
+            .onSuccess { _countersViewState.value = Success(it) }
+            .onFailure { _countersViewState.value = Error(it.throwable) }
+    }
+
+    fun selectCounter(counter: Counter) = executeUseCase {
+        selectCounterUseCase(counter)
+            .onSuccess { _countersViewState.value = Success(it) }
+            .onFailure { _countersViewState.value = Error(it.throwable) }
+    }
+
+    fun unSelectCounter(counter: Counter) = executeUseCase {
+        unSelectCounterUseCase(counter)
+            .onSuccess { _countersViewState.value = Success(it) }
+            .onFailure { _countersViewState.value = Error(it.throwable) }
+    }
+
+    fun deleteCounter(counters: List<Counter>) = executeUseCase {
+        deleteCounterUseCase(counters)
             .onSuccess { _countersViewState.value = Success(it) }
             .onFailure { _countersViewState.value = Error(it.throwable) }
     }

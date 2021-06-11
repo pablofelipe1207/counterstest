@@ -7,6 +7,9 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModel
 import com.cornershop.counterstest.data.common.corutine.CoroutineContextProvider
 import com.cornershop.counterstest.domain.model.Counter
@@ -22,6 +25,9 @@ inline fun ViewModel.launch(
     crossinline block: suspend CoroutineScope.() -> Unit): Job {
     return viewModelScope.launch(coroutineContext) { block() }
 }
+
+inline fun <T> LiveData<T>.subscribe(owner: LifecycleOwner, crossinline onDataReceived: (T) -> Unit) =
+    observe(owner, Observer { onDataReceived(it) })
 
 fun List<Counter>.toShareString(): String {
     val builder = StringBuilder()

@@ -23,7 +23,7 @@ class CounterRepositoryImpl(private val counterApi: CounterApi, private val coun
                 withContext(contextProvider.io) {
                     val response = counterApi.getAllCounter()
                     counterDao.insert(response)
-                    counters.addAll(response.map { it.mapToDomainModel() })
+                    counters.addAll(counterDao.selectAllItems().map { it.mapToDomainModel() })
                 }
             } else {
                 counters.addAll(withContext(contextProvider.io) {
@@ -123,27 +123,26 @@ class CounterRepositoryImpl(private val counterApi: CounterApi, private val coun
         }
     }
 
-    override suspend fun deleteCounter(counter: Counter): Result<List<Counter>> {
-        val counters = arrayListOf<Counter>()
+    override suspend fun deleteCounter(counters: List<Counter>): Result<List<Counter>> {
         return try {
-            if (connectivity.hasNetworkAccess()) {
-                withContext(contextProvider.io) {
-                    if(counter.id.isEmpty()){
+            counters.forEach { counter ->
+                if (connectivity.hasNetworkAccess()) {
+                    withContext(contextProvider.io) {
+                        if(counter.id.isEmpty()){
+                            counterDao.delete(counter.title)
+                        }else{
+                            counterDao.delete(counter.title)
+                            val response = counterApi.deleteCounter(IdRequest(counter.id))
+                            counterDao.insert(response)
+                        }
+                    }
+                } else {
+                    withContext(contextProvider.io) {
                         counterDao.delete(counter.title)
-                        counters.addAll(counterDao.selectAllItems().map { it.mapToDomainModel() })
-                    }else{
-                        val response = counterApi.deleteCounter(IdRequest(counter.id))
-                        counterDao.insert(response)
-                        counters.addAll(response.map { it.mapToDomainModel() })
                     }
                 }
-            } else {
-                withContext(contextProvider.io) {
-                    counterDao.delete(counter.title)
-                    counters.addAll(counterDao.selectAllItems().map { it.mapToDomainModel() })
-                }
             }
-            Success(counters)
+            Success(counterDao.selectAllItems().map { it.mapToDomainModel() })
         } catch (ex: Exception) {
             Failure(CounterError(Throwable(GENERAL_ERROR)))
         }

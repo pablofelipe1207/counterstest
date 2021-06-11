@@ -189,7 +189,8 @@ class CounterRepositoryTest : KoinTest {
             whenever(connectivity.hasNetworkAccess()).thenReturn(true)
             whenever(contextProvider.io).thenReturn(Dispatchers.IO)
             whenever(counterApi.deleteCounter(IdRequest(counterModel.id))).thenReturn(arrayListOf())
-            val result = counterRepository.deleteCounter(counterModel.mapToDomainModel())
+            whenever(counterDao.selectAllItems()).thenReturn(arrayListOf())
+            val result = counterRepository.deleteCounter(arrayListOf(counterModel.mapToDomainModel()))
 
             verify(counterApi).deleteCounter(IdRequest(counterModel.id))
             verify(counterDao).insert(arrayListOf())
@@ -206,7 +207,7 @@ class CounterRepositoryTest : KoinTest {
             whenever(connectivity.hasNetworkAccess()).thenReturn(false)
             whenever(contextProvider.io).thenReturn(Dispatchers.IO)
             whenever(counterDao.selectAllItems()).thenReturn(arrayListOf())
-            val result = counterRepository.deleteCounter(counterModel.mapToDomainModel())
+            val result = counterRepository.deleteCounter(arrayListOf(counterModel.mapToDomainModel()))
 
             verify(counterDao).delete(counterModel.title)
             verify(counterDao).selectAllItems()

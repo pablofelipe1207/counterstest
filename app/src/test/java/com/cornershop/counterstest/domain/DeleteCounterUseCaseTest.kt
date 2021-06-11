@@ -17,8 +17,8 @@ class DeleteCounterUseCaseTest {
     fun `test DeleteCounterUseCase calls CounterRepository`() {
         runBlocking {
             val counter = Counter(id = "1", title = "t", count = 0)
-            deleteCounterUseCase(counter)
-            verify(counterRepository).deleteCounter(counter)
+            deleteCounterUseCase(arrayListOf(counter))
+            verify(counterRepository).deleteCounter(arrayListOf(counter))
         }
     }
 
