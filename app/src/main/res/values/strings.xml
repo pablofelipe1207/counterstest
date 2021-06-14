@@ -1,5 +1,10 @@
 <resources>
     <!-- Examples -->
+    <string-array name="examplesList">
+        <item>drinks_array</item>
+        <item>food_array</item>
+        <item>misc_array</item>
+    </string-array>
     <string-array name="drinks_array">
         <item>Cups of coffee</item>
         <item>Glasses of water</item>

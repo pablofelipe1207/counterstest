@@ -6,10 +6,15 @@ import com.cornershop.counterstest.R
 import com.cornershop.counterstest.databinding.LayoutExamplesItemBinding
 import com.cornershop.counterstest.domain.model.Example
 import com.cornershop.counterstest.presentation.ui.common.GenericAdapter
+import com.cornershop.counterstest.presentation.ui.home.create.CreateItemViewModel
 import java.util.*
 import kotlin.collections.ArrayList
 
-class ExampleAdapter (private val context: Context, exampleList: ArrayList<Example>) : GenericAdapter<Example, LayoutExamplesItemBinding>(exampleList) {
+class ExampleAdapter(
+    private val context: Context,
+    exampleList: ArrayList<Example>,
+    private val mCreateItemViewModel: CreateItemViewModel
+) : GenericAdapter<Example, LayoutExamplesItemBinding>(exampleList) {
     override fun getLayoutResId(): Int {
         return R.layout.layout_examples_item
     }
@@ -21,7 +26,7 @@ class ExampleAdapter (private val context: Context, exampleList: ArrayList<Examp
 
     private fun setItems(model: Example, dataBinding: LayoutExamplesItemBinding) {
         dataBinding.lvExample.removeAllViews()
-        model.items.forEach{ item ->  dataBinding.lvExample.addView(ExampleItem(context).setItem(item))  }
+        model.items.forEach{ item ->  dataBinding.lvExample.addView(ExampleItem(context).setItem(item,mCreateItemViewModel))  }
         dataBinding.lvExample.visibility = View.VISIBLE
     }
 

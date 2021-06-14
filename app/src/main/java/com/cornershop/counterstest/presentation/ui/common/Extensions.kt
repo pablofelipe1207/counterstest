@@ -7,6 +7,9 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModel
 import com.cornershop.counterstest.data.common.corutine.CoroutineContextProvider
 import com.cornershop.counterstest.domain.model.Counter
@@ -15,6 +18,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlin.coroutines.CoroutineContext
 import androidx.lifecycle.viewModelScope
+import com.cornershop.counterstest.presentation.ui.base.BaseFragment
 import kotlinx.coroutines.launch
 
 inline fun ViewModel.launch(
@@ -22,6 +26,9 @@ inline fun ViewModel.launch(
     crossinline block: suspend CoroutineScope.() -> Unit): Job {
     return viewModelScope.launch(coroutineContext) { block() }
 }
+
+inline fun <T> LiveData<T>.subscribe(owner: LifecycleOwner, crossinline onDataReceived: (T) -> Unit) =
+    observe(owner, Observer { onDataReceived(it) })
 
 fun List<Counter>.toShareString(): String {
     val builder = StringBuilder()
@@ -77,14 +84,14 @@ fun AppCompatActivity.showVirtualKeyboard() {
     }
 }
 
-fun Fragment.showVirtualKeyboard() {
+fun BaseFragment.showVirtualKeyboard() {
     val activity = this.activity
     if (activity is AppCompatActivity) {
         activity.showVirtualKeyboard()
     }
 }
 
-fun Fragment.hideKeyboard() {
+fun BaseFragment.hideKeyboard() {
     val activity = this.activity
     if (activity is AppCompatActivity) {
         activity.hideKeyboard()

@@ -34,6 +34,7 @@ class CounterAdapter(private val context: Context, private val currentCounterLis
         dataBinding.parent.setOnLongClickListener {
             model.isSelected = model.isSelected.not()
             isSelectedView(model.isSelected, dataBinding)
+            _interface.selectedCounter(model)
             return@setOnLongClickListener true
         }
         isSelectedView(model.isSelected, dataBinding)
@@ -47,15 +48,30 @@ class CounterAdapter(private val context: Context, private val currentCounterLis
     interface CounterAdapterInterface {
         fun increaseCounter(counter: Counter)
         fun decrementCounter(counter: Counter)
+        fun selectedCounter(counter: Counter)
     }
 
     private fun isSelectedView(isSelected: Boolean, dataBinding: LayoutMainCounterItemBinding) {
         if (isSelected) {
             dataBinding.ivCheck.visibility = View.VISIBLE
             dataBinding.parent.setBackgroundResource(R.drawable.ic_selected_item)
+            dataBinding.ivPlus.visibility = View.GONE
+            dataBinding.ivMinus.visibility = View.GONE
+            dataBinding.tvCounter.visibility = View.GONE
         } else {
-            dataBinding.ivCheck.visibility = View.GONE
-            dataBinding.parent.setBackgroundResource(0)
+            if(currentCounterList.filter { it.isSelected }.isNotEmpty()){
+                dataBinding.ivCheck.visibility = View.GONE
+                dataBinding.parent.setBackgroundResource(0)
+                dataBinding.ivPlus.visibility = View.GONE
+                dataBinding.ivMinus.visibility = View.GONE
+                dataBinding.tvCounter.visibility = View.GONE
+            }else{
+                dataBinding.ivCheck.visibility = View.GONE
+                dataBinding.parent.setBackgroundResource(0)
+                dataBinding.ivPlus.visibility = View.VISIBLE
+                dataBinding.ivMinus.visibility = View.VISIBLE
+                dataBinding.tvCounter.visibility = View.VISIBLE
+            }
         }
     }
 

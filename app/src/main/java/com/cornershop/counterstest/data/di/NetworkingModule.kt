@@ -9,7 +9,7 @@ import retrofit2.Converter
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
-private const val BASE_URL = "http://192.168.0.18:3000"
+private const val BASE_URL = "http://192.168.0.13:3000"
 
 val networkingModule = module {
     single { GsonConverterFactory.create() as Converter.Factory }

@@ -9,7 +9,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleObserver
 import androidx.lifecycle.OnLifecycleEvent
 
-open class BaseFragment : Fragment(), LifecycleObserver {
+abstract class BaseFragment : Fragment(), LifecycleObserver {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View?{
         lifecycle.addObserver(this)
