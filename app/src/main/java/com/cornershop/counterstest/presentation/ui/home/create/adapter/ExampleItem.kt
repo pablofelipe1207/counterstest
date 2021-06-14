@@ -7,6 +7,8 @@ import android.widget.FrameLayout
 import androidx.databinding.DataBindingUtil
 import com.cornershop.counterstest.R
 import com.cornershop.counterstest.databinding.LayoutExampleItemBinding
+import com.cornershop.counterstest.domain.model.Counter
+import com.cornershop.counterstest.presentation.ui.home.create.CreateItemViewModel
 
 class ExampleItem : FrameLayout {
 
@@ -29,8 +31,11 @@ class ExampleItem : FrameLayout {
         dataBinding = DataBindingUtil.inflate(inflater, R.layout.layout_example_item, this, true)
     }
 
-    fun setItem(item: String): ExampleItem {
+    fun setItem(item: String, mCreateItemViewModel: CreateItemViewModel): ExampleItem {
         dataBinding.tvItemName.text = item
+        dataBinding.parentView.setOnClickListener {
+            mCreateItemViewModel.createCounter(Counter(id="",title= item, count = 0))
+        }
         return this
     }
 

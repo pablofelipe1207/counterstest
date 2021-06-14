@@ -10,15 +10,17 @@ import android.text.style.ClickableSpan
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.navigation.fragment.findNavController
 import com.cornershop.counterstest.R
 import com.cornershop.counterstest.databinding.FragmentCreateItemBinding
 import com.cornershop.counterstest.domain.model.Counter
-import com.cornershop.counterstest.presentation.ui.base.BaseFragment
+import com.cornershop.counterstest.presentation.ui.base.*
 import com.cornershop.counterstest.presentation.ui.common.addCustomTextChangedListener
 import com.cornershop.counterstest.presentation.ui.common.hideKeyboard
 import com.cornershop.counterstest.presentation.ui.common.isEmpty
+import com.cornershop.counterstest.presentation.ui.common.subscribe
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class CreateItemFragment : BaseFragment() {
@@ -61,6 +63,7 @@ class CreateItemFragment : BaseFragment() {
             onTextChanged = { inputBlockValidator.invoke() }
         )
         setListeners()
+        subscribeToData()
     }
 
     private fun setListeners(){
@@ -90,6 +93,24 @@ class CreateItemFragment : BaseFragment() {
         label.append(this.getString(R.string.create_counter_disclaimer))
         label.setSpan(clickableSpan, START_INDEX_CLICK, label.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
         return label
+    }
+
+    private fun subscribeToData() {
+        mCreateItemViewModel.countersViewState.subscribe(this, { viewState ->
+            when (viewState) {
+                is Loading -> binding.progressBar.visibility = View.VISIBLE
+                is Success -> findNavController().navigateUp()
+                is Error -> Toast.makeText(
+                    requireContext(),
+                    getString(R.string.error_creating_counter_title),
+                    Toast.LENGTH_SHORT
+                ).show()
+                is NoInternetState -> Toast.makeText(
+                    requireContext(), getString(R.string.error_creating_counter_title),
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+        })
     }
 
     companion object{

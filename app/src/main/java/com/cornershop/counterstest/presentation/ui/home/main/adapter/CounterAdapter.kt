@@ -59,11 +59,19 @@ class CounterAdapter(private val context: Context, private val currentCounterLis
             dataBinding.ivMinus.visibility = View.GONE
             dataBinding.tvCounter.visibility = View.GONE
         } else {
-            dataBinding.ivCheck.visibility = View.GONE
-            dataBinding.parent.setBackgroundResource(0)
-            dataBinding.ivPlus.visibility = View.VISIBLE
-            dataBinding.ivMinus.visibility = View.VISIBLE
-            dataBinding.tvCounter.visibility = View.VISIBLE
+            if(currentCounterList.filter { it.isSelected }.isNotEmpty()){
+                dataBinding.ivCheck.visibility = View.GONE
+                dataBinding.parent.setBackgroundResource(0)
+                dataBinding.ivPlus.visibility = View.GONE
+                dataBinding.ivMinus.visibility = View.GONE
+                dataBinding.tvCounter.visibility = View.GONE
+            }else{
+                dataBinding.ivCheck.visibility = View.GONE
+                dataBinding.parent.setBackgroundResource(0)
+                dataBinding.ivPlus.visibility = View.VISIBLE
+                dataBinding.ivMinus.visibility = View.VISIBLE
+                dataBinding.tvCounter.visibility = View.VISIBLE
+            }
         }
     }
 

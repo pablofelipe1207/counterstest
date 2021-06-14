@@ -18,6 +18,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlin.coroutines.CoroutineContext
 import androidx.lifecycle.viewModelScope
+import com.cornershop.counterstest.presentation.ui.base.BaseFragment
 import kotlinx.coroutines.launch
 
 inline fun ViewModel.launch(
@@ -83,14 +84,14 @@ fun AppCompatActivity.showVirtualKeyboard() {
     }
 }
 
-fun Fragment.showVirtualKeyboard() {
+fun BaseFragment.showVirtualKeyboard() {
     val activity = this.activity
     if (activity is AppCompatActivity) {
         activity.showVirtualKeyboard()
     }
 }
 
-fun Fragment.hideKeyboard() {
+fun BaseFragment.hideKeyboard() {
     val activity = this.activity
     if (activity is AppCompatActivity) {
         activity.hideKeyboard()
