@@ -16,6 +16,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.cornershop.counterstest.R
 import com.cornershop.counterstest.databinding.FragmentSearchBinding
 import com.cornershop.counterstest.domain.model.Counter
+import com.cornershop.counterstest.presentation.ui.DialogFactory
 import com.cornershop.counterstest.presentation.ui.base.*
 import com.cornershop.counterstest.presentation.ui.common.addCustomTextChangedListener
 import com.cornershop.counterstest.presentation.ui.common.hideKeyboard
@@ -33,10 +34,10 @@ class SearchFragment : BaseFragment() {
     var isFirstSearch = true
     private val counterInterface = object : SearchAdapter.SearchAdapterInterface {
         override fun increaseCounter(counter: Counter) {
-            sViewModel.increaseCounter(counter)
+            search?.let { sViewModel.increaseCounter(counter, it) }
         }
         override fun decrementCounter(counter: Counter) {
-            sViewModel.decrementCounter(counter)
+            search?.let { sViewModel.decrementCounter(counter, it) }
         }
     }
 
@@ -83,6 +84,7 @@ class SearchFragment : BaseFragment() {
                     requireContext(), getString(R.string.error_creating_counter_title),
                     Toast.LENGTH_SHORT
                 ).show()
+                is DialogError ->  DialogFactory.showNoInternetView(requireContext(), {}, viewState.error)
             }
         })
     }

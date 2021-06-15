@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.cornershop.counterstest.R
 import com.cornershop.counterstest.databinding.FragmentCreateItemExamplesBinding
 import com.cornershop.counterstest.domain.model.Example
+import com.cornershop.counterstest.presentation.ui.DialogFactory
 import com.cornershop.counterstest.presentation.ui.base.*
 import com.cornershop.counterstest.presentation.ui.common.subscribe
 import com.cornershop.counterstest.presentation.ui.home.create.adapter.ExampleAdapter
@@ -75,6 +76,7 @@ class CreateItemExampleFragment : BaseFragment() {
                     requireContext(), getString(R.string.error_creating_counter_title),
                     Toast.LENGTH_SHORT
                 ).show()
+                is DialogError ->  DialogFactory.showNoInternetView(requireContext(), {}, viewState.error)
             }
         })
     }

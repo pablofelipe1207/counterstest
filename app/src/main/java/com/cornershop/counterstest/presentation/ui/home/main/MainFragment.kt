@@ -8,7 +8,6 @@ import android.text.style.ForegroundColorSpan
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.core.text.bold
 import androidx.navigation.fragment.findNavController
@@ -62,20 +61,38 @@ class MainFragment : BaseFragment() {
 
     private fun subscribeToData() {
         mViewModel.countersViewState.subscribe(this, { viewState ->
+            binding.progressBar.visibility = View.GONE
             when (viewState) {
                 is Loading -> binding.progressBar.visibility = View.VISIBLE
                 is Success -> showCounters(ArrayList(viewState.data))
-                is Error -> Toast.makeText(
-                    requireContext(),
-                    getString(R.string.error_creating_counter_title),
-                    Toast.LENGTH_SHORT
-                ).show()
-                is NoInternetState -> Toast.makeText(
-                    requireContext(), getString(R.string.error_creating_counter_title),
-                    Toast.LENGTH_SHORT
-                ).show()
+                is Error, is NoInternetState -> showInternetErrorView()
+                is DialogError ->  DialogFactory.showNoInternetView(requireContext(), {}, viewState.error)
             }
         })
+    }
+
+    private fun showEmptyView() {
+        showRemoveHeader(false, arrayListOf())
+        setBreadcrumb(arrayListOf())
+        binding.rvCounters.visibility = View.GONE
+        binding.retry.visibility = View.GONE
+        binding.swipeContainer.visibility = View.GONE
+        binding.progressBar.visibility = View.GONE
+        binding.title.visibility = View.VISIBLE
+        binding.subTitle.visibility = View.VISIBLE
+        binding.title.text = activity?.getText(R.string.no_counters)
+        binding.subTitle.text = activity?.getText(R.string.no_counters_phrase)
+    }
+
+    private fun showInternetErrorView() {
+        binding.rvCounters.visibility = View.GONE
+        binding.retry.visibility = View.VISIBLE
+        binding.swipeContainer.visibility = View.GONE
+        binding.progressBar.visibility = View.GONE
+        binding.title.visibility = View.VISIBLE
+        binding.subTitle.visibility = View.VISIBLE
+        binding.title.text = activity?.getText(R.string.error_load_counters_title)
+        binding.subTitle.text = activity?.getText(R.string.connection_error_description)
     }
 
     private fun setListeners() {
@@ -121,28 +138,36 @@ class MainFragment : BaseFragment() {
 
     private fun showCounters(data: ArrayList<Counter>){
         counters = data
-        val selected = data.filter { it.isSelected }
-        if(selected.isNotEmpty()){
-            showRemoveHeader(true, selected)
+        if(data.isEmpty()){
+            showEmptyView()
         }else{
-            showRemoveHeader(false, data)
+            val selected = data.filter { it.isSelected }
+            if(selected.isNotEmpty()){
+                showRemoveHeader(true, selected)
+            }else{
+                showRemoveHeader(false, data)
+            }
+            setBreadcrumb(data)
+            binding.swipeContainer.isRefreshing = false
+            binding.title.visibility = View.GONE
+            binding.retry.visibility = View.GONE
+            binding.subTitle.visibility = View.GONE
+            binding.progressBar.visibility = View.GONE
+            binding.rvCounters.visibility = View.VISIBLE
+            binding.swipeContainer.visibility = View.VISIBLE
+            adapter = CounterAdapter(requireContext(),data,counterInterface)
+            binding.rvCounters.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
+            binding.rvCounters.adapter = adapter
         }
-        setBreadcrumb(data)
-        binding.swipeContainer.isRefreshing = false
-        binding.title.visibility = View.GONE
-        binding.retry.visibility = View.GONE
-        binding.subTitle.visibility = View.GONE
-        binding.progressBar.visibility = View.GONE
-        binding.rvCounters.visibility = View.VISIBLE
-        binding.swipeContainer.visibility = View.VISIBLE
-        adapter = CounterAdapter(requireContext(),data,counterInterface)
-        binding.rvCounters.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
-        binding.rvCounters.adapter = adapter
     }
 
 
     private fun showRemoveHeader(isVisible : Boolean, data: List<Counter>){
         if(isVisible){
+            binding.title.visibility = View.GONE
+            binding.retry.visibility = View.GONE
+            binding.subTitle.visibility = View.GONE
+            binding.progressBar.visibility = View.GONE
             binding.ivClose.visibility = View.VISIBLE
             binding.tvSearchText.visibility = View.GONE
             binding.share.visibility = View.VISIBLE
