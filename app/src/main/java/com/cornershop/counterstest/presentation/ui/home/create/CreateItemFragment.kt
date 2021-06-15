@@ -16,6 +16,7 @@ import androidx.navigation.fragment.findNavController
 import com.cornershop.counterstest.R
 import com.cornershop.counterstest.databinding.FragmentCreateItemBinding
 import com.cornershop.counterstest.domain.model.Counter
+import com.cornershop.counterstest.presentation.ui.DialogFactory
 import com.cornershop.counterstest.presentation.ui.base.*
 import com.cornershop.counterstest.presentation.ui.common.addCustomTextChangedListener
 import com.cornershop.counterstest.presentation.ui.common.hideKeyboard
@@ -97,18 +98,22 @@ class CreateItemFragment : BaseFragment() {
 
     private fun subscribeToData() {
         mCreateItemViewModel.countersViewState.subscribe(this, { viewState ->
+            binding.saveButton.visibility = View.VISIBLE
+            binding.progressBar.visibility = View.GONE
             when (viewState) {
-                is Loading -> binding.progressBar.visibility = View.VISIBLE
+                is Loading -> {
+                    binding.saveButton.visibility = View.GONE
+                    binding.progressBar.visibility = View.VISIBLE
+                }
                 is Success -> findNavController().navigateUp()
-                is Error -> Toast.makeText(
+                is Error -> {
+                    Toast.makeText(
                     requireContext(),
                     getString(R.string.error_creating_counter_title),
                     Toast.LENGTH_SHORT
                 ).show()
-                is NoInternetState -> Toast.makeText(
-                    requireContext(), getString(R.string.error_creating_counter_title),
-                    Toast.LENGTH_SHORT
-                ).show()
+                }
+                is DialogError ->  DialogFactory.showNoInternetView(requireContext(), {}, viewState.error)
             }
         })
     }

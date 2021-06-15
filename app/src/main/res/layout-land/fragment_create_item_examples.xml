@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:paddingStart="@dimen/dimen40"
+    android:paddingEnd="@dimen/dimen40"
+    tools:context=".presentation.ui.MainActivity">
+
+    <ImageButton
+        android:id="@+id/ivClose"
+        android:layout_width="@dimen/dimen15"
+        android:layout_height="@dimen/dimen15"
+        android:layout_marginStart="@dimen/dimen12"
+        android:src="@drawable/ic_arrow_back"
+        app:layout_constraintBottom_toBottomOf="@id/title"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@id/title" />
+
+    <TextView
+        android:id="@+id/title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/dimen12"
+        android:layout_marginStart="@dimen/dimen72"
+        android:text="@string/examples"
+        android:textColor="@color/black"
+        android:textSize="@dimen/textSize22"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/subTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/dimen15"
+        android:layout_marginTop="@dimen/dimen20"
+        android:layout_marginEnd="@dimen/dimen10"
+        android:text="@string/examples_description"
+        android:textColor="@color/gray"
+        android:textSize="@dimen/textSize15"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/title"/>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rvExamples"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dimen0"
+        android:layout_marginTop="@dimen/dimen10"
+        android:layout_marginBottom="@dimen/dimen10"
+        android:visibility="visible"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/subTitle"
+        app:layout_constraintBottom_toBottomOf="parent"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

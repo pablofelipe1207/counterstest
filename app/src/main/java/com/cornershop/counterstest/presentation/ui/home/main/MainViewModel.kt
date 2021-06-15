@@ -1,5 +1,7 @@
 package com.cornershop.counterstest.presentation.ui.home.main
 
+import android.content.Context
+import com.cornershop.counterstest.R
 import com.cornershop.counterstest.domain.model.Counter
 import com.cornershop.counterstest.domain.model.onFailure
 import com.cornershop.counterstest.domain.model.onSuccess
@@ -8,6 +10,7 @@ import com.cornershop.counterstest.presentation.ui.base.BaseViewModel
 import com.cornershop.counterstest.presentation.ui.base.*
 
 class MainViewModel(
+    private val context: Context,
     private val getCountersUseCase: GetCountersUseCase,
     private val increaseCounterUseCase: IncreaseCounterUseCase,
     private val decrementCounterUseCase: DecrementCounterUseCase,
@@ -25,13 +28,13 @@ class MainViewModel(
     fun increaseCounter(counter: Counter) = executeUseCase {
         increaseCounterUseCase(counter)
             .onSuccess { _countersViewState.value = Success(it) }
-            .onFailure { _countersViewState.value = Error(it.throwable) }
+            .onFailure { _countersViewState.value = DialogError(context.getString(R.string.error_updating_counter_title,counter.title,counter.increment())) }
     }
 
     fun decrementCounter(counter: Counter) = executeUseCase {
         decrementCounterUseCase(counter)
             .onSuccess { _countersViewState.value = Success(it) }
-            .onFailure { _countersViewState.value = Error(it.throwable) }
+            .onFailure { _countersViewState.value = DialogError(context.getString(R.string.error_updating_counter_title,counter.title,counter.decrement())) }
     }
 
     fun selectCounter(counter: Counter) = executeUseCase {
@@ -49,7 +52,7 @@ class MainViewModel(
     fun deleteCounter(counters: List<Counter>) = executeUseCase {
         deleteCounterUseCase(counters)
             .onSuccess { _countersViewState.value = Success(it) }
-            .onFailure { _countersViewState.value = Error(it.throwable) }
+            .onFailure { _countersViewState.value = DialogError(context.getString(R.string.error_deleting_counter_title)) }
     }
 
 }
